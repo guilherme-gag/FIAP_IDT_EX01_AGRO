@@ -13,11 +13,12 @@ public class LeituraController {
     @Autowired
     private LeituraService service;
 
+    //Action para envio de uma leitura de um drone para o serviço de mensageria
     @PostMapping
     private ResponseEntity insereLeitura(@RequestBody LeituraDto leituraDto){
         System.out.println(leituraDto.droneId);
         if(this.service.enviarMensagem(leituraDto))
-        return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.OK);
         else
             return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
     }

@@ -10,7 +10,7 @@ public class LeituraService {
 
     @Autowired
     private RabbitmqService rabbitmqService;
-
+    //Método que valida os dados de uma leitura e envia para o serviço Rabbitmq
     public boolean enviarMensagem(LeituraDto leituraDto)
     {
         boolean valido = validar(leituraDto);
@@ -19,9 +19,20 @@ public class LeituraService {
         }
         return valido;
     }
-
+    //Método que valida os dados de uma leitura
     public  boolean validar(LeituraDto leitura){
-        boolean valido = true;
-        return  valido;
+        //valida umidade
+        if(leitura.umidade > 100 || leitura.umidade < 0)
+            return false;
+        //valida temperatura
+        if(leitura.temperatura <-25 || leitura.temperatura > 40)
+            return false;
+        //valida latitude
+        if(leitura.latitude > 90 || leitura.latitude < -90)
+            return false;
+        //valida longitude
+        if(leitura.longitude > 180 || leitura.longitude <-180)
+            return  false;
+        return  true;
     }
 }

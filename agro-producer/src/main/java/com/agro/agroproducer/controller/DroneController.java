@@ -15,7 +15,7 @@ public class DroneController {
 
     @Autowired
     private DroneService service;
-
+    //action para criação de 10 simulações de drone
     @PostMapping
     private ResponseEntity criarDroneSimulacao(){
         for(int cont=1;cont<=10;cont++)

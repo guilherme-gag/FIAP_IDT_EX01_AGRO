@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DroneService {
 
+    //Método que cria a simução de um drone
     public void criarDroneSimulacao(int droneId){
         try {
             // Cria job para simular um drone
