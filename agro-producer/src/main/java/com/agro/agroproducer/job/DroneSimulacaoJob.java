@@ -37,7 +37,6 @@ public class DroneSimulacaoJob implements Job {
     }
     //Metodo que gera um numero aleatorio
     private int getRandomNumber (int min, int max) {
-
         int numeroAleatorio = ( int )( Math.random() * max );
         if( numeroAleatorio <= min ) {
             numeroAleatorio = numeroAleatorio + min;
