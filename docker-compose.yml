@@ -1,4 +1,19 @@
+version: "3.2"
 services:
+ agro-producer:
+  build: ./agro-producer
+  ports:
+   - "8080:8080"
+  depends_on:
+   - rabbitmq
+  network_mode: "host"
+ agro-consumer:
+  build: ./agro-consumer
+  ports:
+   - "8090:8090"
+  depends_on:
+   - rabbitmq
+  network_mode: "host"
  rabbitmq:
   image: rabbitmq:3-management
   container_name: rabbitmq

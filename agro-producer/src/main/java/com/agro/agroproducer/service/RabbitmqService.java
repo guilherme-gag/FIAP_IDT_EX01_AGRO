@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RabbitmqService {
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
-    public void enviaMensagem(String nomeFila, Object mensagem){
-        this.rabbitTemplate.convertAndSend(nomeFila,mensagem);
+
+    public void sendMessage(String queueName, Object message) {
+        this.rabbitTemplate.convertAndSend(queueName, message);
     }
+
 }

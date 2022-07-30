@@ -1,36 +1,40 @@
 package com.agro.agroproducer.service;
 
-import com.agro.agroproducer.job.DroneSimulacaoJob;
-import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
+import dto.LeituraDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DroneService {
 
-    //Método que cria a simução de um drone
-    public void criarDroneSimulacao(int droneId){
-        try {
-            // Cria job para simular um drone
-            JobDetail job = JobBuilder.newJob(DroneSimulacaoJob.class)
-                    .withIdentity("droneJob" + droneId)
-                    .build();
-            job.getJobDataMap().put("droneId",droneId);
-            // Define periodo de tempo para execução do job
-            Trigger trigger = TriggerBuilder.newTrigger()
-                    .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-                            .withIntervalInSeconds(10)
-                            .repeatForever())
-                    .build();
-            //Agenda o job
-            SchedulerFactory schFactory = new StdSchedulerFactory();
-            Scheduler sch = schFactory.getScheduler();
-            sch.start();
-            sch.scheduleJob(job, trigger);
+    @Autowired
+    private LeituraService service;
 
-        } catch (SchedulerException e) {
-            e.printStackTrace();
+    private LeituraDTO leitura;
+
+    public void criarDroneSimulacao() {
+
+        for (int i = 1; i <= 10; i++) {
+
+            leitura = new LeituraDTO();
+            leitura.setDroneId(i);
+            leitura.setTemperatura(getRandomNumber(-25, 40));
+            leitura.setUmidade(getRandomNumber(-10, 120));
+            leitura.setLatitude(getRandomNumber(-100, 100));
+            leitura.setLongitude(getRandomNumber(-190, 190));
+            leitura.setAtivarRastreamento((getRandomNumber(0, 1) == 1));
+
+            service.sendMessage(leitura);
         }
+
+
     }
 
+    private int getRandomNumber(int min, int max) {
+        int numeroAleatorio = (int) (Math.random() * max);
+        if (numeroAleatorio <= min) {
+            numeroAleatorio = numeroAleatorio + min;
+        }
+        return numeroAleatorio;
+    }
 }

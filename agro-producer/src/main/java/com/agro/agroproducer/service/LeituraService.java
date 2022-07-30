@@ -1,38 +1,55 @@
 package com.agro.agroproducer.service;
 
 import constantes.RabbitmqConstantes;
-import dto.LeituraDto;
+import dto.LeituraDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 @Service
 public class LeituraService {
 
     @Autowired
     private RabbitmqService rabbitmqService;
-    //Método que valida os dados de uma leitura e envia para o serviço Rabbitmq
-    public boolean enviarMensagem(LeituraDto leituraDto)
-    {
-        boolean valido = validar(leituraDto);
-        if(valido) {
-            this.rabbitmqService.enviaMensagem(RabbitmqConstantes.FILA_LEITURAS, leituraDto);
+
+    public boolean sendMessage(LeituraDTO leituraDTO) {
+
+        boolean isValid = validate(leituraDTO);
+        leituraDTO.setValido(isValid);
+
+        System.out.println(leituraDTO.toString());
+
+        boolean emailSeraEnviado = checkSendEmail(leituraDTO);
+
+        if(emailSeraEnviado){
+            System.out.println("SERA ENVIADO" + leituraDTO.toString());
         }
-        return valido;
+
+
+        if (isValid) {
+            this.rabbitmqService.sendMessage(RabbitmqConstantes.FILA_LEITURAS, leituraDTO);
+        }
+        return isValid;
     }
-    //Método que valida os dados de uma leitura
-    public  boolean validar(LeituraDto leitura){
-        //valida umidade
-        if(leitura.umidade > 100 || leitura.umidade < 0)
-            return false;
-        //valida temperatura
-        if(leitura.temperatura <-25 || leitura.temperatura > 40)
-            return false;
-        //valida latitude
-        if(leitura.latitude > 90 || leitura.latitude < -90)
-            return false;
-        //valida longitude
-        if(leitura.longitude > 180 || leitura.longitude <-180)
-            return  false;
-        return  true;
+
+    public boolean validate(@Valid LeituraDTO leituraDTO) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        return validator.validate(leituraDTO).isEmpty();
+
     }
+    private boolean checkSendEmail(LeituraDTO leituraDTO) {
+
+        boolean alertaTemperatura = leituraDTO.getTemperatura() >= 35 || leituraDTO.getTemperatura() <= 0 ? true : false;
+        boolean alertaUmidade = leituraDTO.getUmidade() <= 15 ? true : false;
+        boolean valido = leituraDTO.isValido();
+
+        return (alertaTemperatura || alertaUmidade) && valido;
+    }
+
 }
