@@ -18,7 +18,7 @@ public class DroneSimulator {
     @Autowired
     private DroneService service;
 
-//    @Scheduled(fixedRate = Timer.ONE_SECOND * 30, initialDelay = Timer.ONE_SECOND * 10)
+    @Scheduled(fixedRate = Timer.ONE_SECOND * 30, initialDelay = Timer.ONE_SECOND * 10)
     private void droneSimulator() {
         service.criarDroneSimulacao();
     }

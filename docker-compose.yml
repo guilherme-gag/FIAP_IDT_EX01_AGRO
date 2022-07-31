@@ -1,28 +1,64 @@
 version: "3.2"
 services:
- agro-producer:
-  build: ./agro-producer
-  ports:
-   - "8080:8080"
-  depends_on:
-   - rabbitmq
-  network_mode: "host"
+
  agro-consumer:
-  build: ./agro-consumer
+  image: agro-consumer-compose
+  build:
+   context: ./agro-consumer
+   dockerfile: Dockerfile
+  container_name: agro-consumer
+  environment:
+   - EMAIL_PASSWORD={passwod}
+   - EMAIL_USER={user}
   ports:
    - "8090:8090"
   depends_on:
-   - rabbitmq
-  network_mode: "host"
+   - "rabbitmq"
+  networks:
+   - my-networks
+  restart: on-failure
+
  rabbitmq:
-  image: rabbitmq:3-management
+  image: rabbitmq
   container_name: rabbitmq
-  restart: always
+  restart: on-failure
+  networks:
+   -  my-networks
   ports:
    - 5672:5672
    - 15672:15672
-  volumes: 
+  expose:
+   - 5672
+   - 15672
+  healthcheck:
+   test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+   interval: 5s
+   timeout: 15s
+   retries: 1
+  volumes:
    - ./dados:/var/lib/rabbitmq/
   environment:
    - RABBITMQ_DEFAULT_USER=admin
    - RABBITMQ_DEFAULT_PASS=123456
+
+ agro-producer:
+  image: agro-producer-compose
+  build:
+   context: ./agro-producer
+   dockerfile: Dockerfile
+  container_name: agro-producer
+  ports:
+   - "8080:8080"
+  networks:
+   - my-networks
+  expose:
+   - 8080
+  depends_on:
+   - "rabbitmq"
+  links:
+   - rabbitmq
+  restart: on-failure
+
+networks:
+ my-networks:
+  driver: bridge
