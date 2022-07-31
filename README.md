@@ -31,4 +31,21 @@ spring.mail.username=emailQueVaiEnviar@email.com #EMAIL
 
 # Docker Compose <img align="left" alt="DockerCompose" width="30px" src="https://stack.desenvolvedor.expert/appendix/docker/images/compose.png"/>
 
+A branch Develop está pŕeparada para rodar o projeto como um todo no docker compose. Existem algumas configurações que devem ser feitas, segue abaixo:
+
+Por demora de se fazer o build de cada projeto Maven dentro do container, não foi incluido o build automatico. Então você deve ir em cada um dos três projetos Java/Spring e executar o comando: "maven clean install" para gerar o artefato .jar. Os projetos são: Agro Lib, Agro Producer e Agro Consumer nessa sequência.
+
+Após gerar os três artefatos, abrir o arquivo docker-compose.yml da pasta raíz, service agro-consumer e preencher as variaveis EMAIL_PASSWORD e EMAIL_USER com o usuário e senha correspondente.
+Obs: Devido a particulariade de cada provedor de e-mail, esse em específico foi escolhido o Gmail por ter uma facilidade. O google tem um gerador de senhas para apps menos seguros (para testes), o que é ideal já que é uma senha que você cadastra na sua conta do Gmail, pode ser excluída a qualquer momento e você não tem necessidade de colocar sua senha real dentro da aplicação.
+Mais detalhes em:
+https://support.google.com/accounts/answer/185833?hl=pt-BR
+
+Após preencher as duas variáveis, na pasta raiz rodar o comando: docker-compose up --build. E a aplicação irá rodar e mandar os e-mail caso necessário.
+A aplicação pode dar algum erro no começo por ter que esperar o RabbiMQ subir, mas ele está sempre restartando. Fique de olho nos logs agro-producer que irá gerar 10 leituras de drones a cada 30 segundos e enviar parao broker. E o broker na sequência se tiver necessidade tentará envial um e-mail para o usuário do e-mail cadastrado na variável de ambiente.
+
+Template no log caso haja uma tentativa de e-mail:
+````
+O drone de ID x apresentou temperatura xx.xºC, umidade: xxx.x%, latitude: xx.x. Rastreamento Ativado: xxx.
+````
+
 
