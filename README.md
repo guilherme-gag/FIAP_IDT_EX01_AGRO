@@ -1,4 +1,3 @@
-# Projeto Agro
 
 ## Desafio
 O desafio proposto diz respeito à construção de uma solução para o agronegócio.
