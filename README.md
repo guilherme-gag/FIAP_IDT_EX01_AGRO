@@ -28,3 +28,7 @@ spring.mail.username=emailQueVaiEnviar@email.com #EMAIL
 ````
 
 - Esse projeto ao fazer a leitura do broker, vai processar os dados e idenfiticar conforme o desafio quando terá que enviar um e-mail de alerta ao e-mail cadastrado.
+
+# Docker Compose <img align="left" alt="DockerCompose" width="30px" src="https://stack.desenvolvedor.expert/appendix/docker/images/compose.png"/>
+
+
