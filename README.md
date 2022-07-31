@@ -37,8 +37,8 @@ Pela demora de se fazer o build de cada projeto Maven dentro do container, não 
 
 Após gerar os três artefatos, abrir o arquivo docker-compose.yml da pasta raíz, "service" agro-consumer e preencher as variaveis EMAIL_PASSWORD e EMAIL_USER com o usuário e senha correspondente.
 Obs: Devido a particulariade de cada provedor de e-mail, foi escolhido o Gmail por ter uma grande facilidade. O google tem um gerador de senhas para apps menos seguros (para testes), o que é ideal já que é uma senha aleatória que você cadastra na sua conta do Gmail e que pode ser excluída a qualquer momento e  você não tem necessidade de colocar sua senha real dentro da aplicação.
-Mais detalhes em:
-https://support.google.com/accounts/answer/185833?hl=pt-BR
+
+Mais detalhes em: https://support.google.com/accounts/answer/185833?hl=pt-BR
 
 Após preencher as duas variáveis, na pasta raiz rodar o comando: docker-compose up --build. E a aplicação irá rodar e mandar os e-mail caso necessário.
 As aplicações Spring/Java pode dar algum erro no começo por ter que esperar o RabbiMQ subir, mas eles estão sempre restartando. 
